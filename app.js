@@ -12,6 +12,7 @@ const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const Listing = require("./models/listing.js");
 
 const listingsRouter = require("./routes/listings.js");
 const reviewsRouter = require("./routes/review.js");
@@ -37,7 +38,7 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 
 
-// const MNGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 const dbUrl = process.env.ATLASDB_URL;
 console.log(process.env.ATLASDB_URL);
 
@@ -84,11 +85,10 @@ const secretOptions = {
 
 
 // root route
-app.get("/", (req, res) => {
+app.get("/", wrapAsync(async (req, res) => {
 
-    res.render("new.ejs");
-
-});
+    res.redirect("/listings");
+}));
 
 app.use(session(secretOptions));
 app.use(flash());
